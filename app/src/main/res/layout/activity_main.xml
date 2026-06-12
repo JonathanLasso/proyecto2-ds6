@@ -36,7 +36,6 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:contentDescription="Ilustración de educación"
-                android:src=""
                 app:srcCompat="@drawable/icono_principal" />
 
             <TextView
@@ -91,7 +90,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvStudentName"
+                            android:id="@+id/tvNombre"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
@@ -109,7 +108,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvStudentCareer"
+                            android:id="@+id/tvCarrera"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=""

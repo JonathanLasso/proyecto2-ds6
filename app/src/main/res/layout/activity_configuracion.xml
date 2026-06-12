@@ -67,7 +67,7 @@
                         android:id="@+id/etNombreCompleto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Ana Pérez"
+                        android:text=""
                         android:textColor="#000000"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -96,7 +96,7 @@
                         android:id="@+id/etCarrera"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Ciberseguridad"
+                        android:text=""
                         android:textColor="#000000"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -125,7 +125,7 @@
                         android:id="@+id/etGrupo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1GS231"
+                        android:text=""
                         android:textColor="#000000"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -156,7 +156,6 @@
                     android:id="@+id/switchNotificaciones"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
                     app:thumbTint="#FFFFFF"
                     app:trackTint="#00C853"/>
             </LinearLayout>
