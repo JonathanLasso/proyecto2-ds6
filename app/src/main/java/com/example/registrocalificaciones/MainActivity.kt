@@ -1,5 +1,7 @@
 package com.example.registrocalificaciones
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         preferencias = getSharedPreferences("informacionEstudiante", Context.MODE_PRIVATE)
         mostrarInformacionEstudiante()
         configuracionPantallas()
+        configuracionNotificaciones()
     }
 
     private fun configuracionPantallas(){
@@ -36,6 +39,18 @@ class MainActivity : AppCompatActivity() {
         }
         binding.btnSalir.setOnClickListener {
             finishAffinity()
+        }
+    }
+
+    private fun configuracionNotificaciones(){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "canal_calificaciones",
+                "Calificaciones",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel)
         }
     }
 

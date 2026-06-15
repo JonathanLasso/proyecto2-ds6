@@ -1,3 +1,47 @@
 <resources>
-    <string name="app_name">registroCalificaciones</string>
+    <string name="app_name">Registro de calificaciones</string>
+
+    <string name="tvBienvenido">Bienvenido</string>
+    <string name="descripcionImagenTitulo">Ilustración de educación</string>
+    <string name="descripcionImagenEstudiante">Ilustracion del estudiante</string>
+    <string name="tvEstudiante">Estudiante:</string>
+    <string name="tvCarrera">Carrera:</string>
+    <string name="tvBtnConfigurar">Configurar Estudiante</string>
+    <string name="tvBtnRegistrar">Registrar Calificaciones</string>
+    <string name="tvBtnHistorial">Ver Historial</string>
+    <string name="tvBtnSalir">Salir</string>
+
+    <string name="tituloPantalla2">Registrar Calificaciones</string>
+    <string name="tvAsignatura">Asignatura</string>
+    <string name="tvNota1">Nota 1</string>
+    <string name="tvNota2">Nota 2</string>
+    <string name="tvNota3">Nota 3</string>
+    <string name="tvNota4">Nota</string>
+    <string name="tvPromedio">Promedio</string>
+    <string name="tvCondicion">Condición</string>
+    <string name="tvGuardar">Guardar Calificación</string>
+    <string name="tvLimpiar">Limpiar Campos</string>
+    <string name="tvRegresar">Regresar al menú</string>
+    <string-array name="condiciones">
+        <item>Excelente</item>
+        <item>Bueno</item>
+        <item>Regular</item>
+        <item>Mínimo aprobado</item>
+        <item>Reprobado</item>
+    </string-array>
+
+    <string name="tituloPantalla3">Datos del Estudiante</string>
+    <string name="tvNombreEstudiante">Nombre completo</string>
+    <string name="tvCarreraEstudiante">Carrera</string>
+    <string name="tvGrupo">Grupo</string>
+    <string name="tvNotificaciones">Notificaciones</string>
+    <string name="tvGuardarDatos">Guardar Datos</string>
+    <string name="descripcionImagenBtnRegresar">Regresar</string>
+    <string name="descripcionImagenPersona">icono persona</string>
+    <string name="descripiconImagenCarrera">icono carrera</string>
+    <string name="descripcionImagenGrupo">icono de grupo</string>
+    <string name="descripcionImagenNotificaciones">icono de notificaciones</string>
+
+
+
 </resources>

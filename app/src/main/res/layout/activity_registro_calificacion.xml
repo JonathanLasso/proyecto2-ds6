@@ -20,12 +20,12 @@
             android:src="@drawable/ic_flecha_regreso"
             app:tint="#FFFFFF"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Regresar" />
+            android:contentDescription="@string/tvRegresar" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Registrar Calificaciones"
+            android:text="@string/tituloPantalla2"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -61,7 +61,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Asignatura"
+                    android:hint="@string/tvAsignatura"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -84,7 +84,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Nota 1"
+                    android:hint="@string/tvNota1"
                     android:layout_marginEnd="8dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -102,7 +102,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Nota 2"
+                    android:hint="@string/tvNota2"
                     android:layout_marginStart="8dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -127,7 +127,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Nota 3"
+                    android:hint="@string/tvNota3"
                     android:layout_marginEnd="8dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -145,7 +145,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Nota 4"
+                    android:hint="@string/tvNota4"
                     android:layout_marginStart="8dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -186,7 +186,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Promedio"
+                            android:text="@string/tvPromedio"
                             android:textColor="#1B5E20"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -218,7 +218,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Condición"
+                            android:text="@string/tvCondicion"
                             android:textColor="#1B5E20"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -229,7 +229,7 @@
                             android:layout_height="wrap_content"
                             android:text=""
                             android:textColor="#00A859"
-                            android:textSize="32sp"
+                            android:textSize="25sp"
                             android:textStyle="bold"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
@@ -245,7 +245,7 @@
                     android:id="@+id/btnGuardar"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Guardar Calificación"
+                    android:text="@string/tvGuardar"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -260,7 +260,7 @@
                     android:id="@+id/btnLimpiar"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Limpiar Campos"
+                    android:text="@string/tvLimpiar"
                     android:textColor="#000000"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -276,7 +276,7 @@
                     android:id="@+id/btnRegresar"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Regresar al menú"
+                    android:text="@string/tvRegresar"
                     android:textColor="#000000"
                     android:textSize="18sp"
                     style="@style/Widget.MaterialComponents.Button.UnelevatedButton"

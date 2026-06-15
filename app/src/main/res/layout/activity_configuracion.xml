@@ -19,12 +19,12 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_flecha_regreso"
             android:background="@android:color/transparent"
-            android:contentDescription="Regresar" />
+            android:contentDescription="@string/descripcionImagenBtnRegresar" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Datos del Estudiante"
+            android:text="@string/tituloPantalla3"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -54,13 +54,14 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/ic_persona"
+                    android:contentDescription="@string/descripcionImagenPersona"
                     app:tint="#3A78D4"
                     android:layout_marginEnd="16dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nombre completo"
+                    android:hint="@string/tvNombreEstudiante"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -83,13 +84,14 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/icono_carrera"
+                    android:contentDescription="@string/descripiconImagenCarrera"
                     app:tint="#1A237E"
                     android:layout_marginEnd="16dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Carrera"
+                    android:hint="@string/tvCarreraEstudiante"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -112,13 +114,14 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/icono_grupo"
+                    android:contentDescription="@string/descripcionImagenGrupo"
                     app:tint="#A13BB6"
                     android:layout_marginEnd="16dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Grupo"
+                    android:hint="@string/tvGrupo"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -141,6 +144,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/icono_notificacion"
+                    android:contentDescription="@string/descripcionImagenNotificaciones"
                     app:tint="#FFB300"
                     android:layout_marginEnd="16dp"/>
 
@@ -148,7 +152,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Notificaciones"
+                    android:text="@string/tvNotificaciones"
                     android:textColor="#000000"
                     android:textSize="18sp" />
 
@@ -175,7 +179,7 @@
                     android:id="@+id/btnGuardar"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Guardar Datos"
+                    android:text="@string/tvGuardarDatos"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -190,7 +194,7 @@
                     android:id="@+id/btnLimpiar"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Limpiar Campos"
+                    android:text="@string/tvLimpiar"
                     android:textColor="#000000"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -206,7 +210,7 @@
                     android:id="@+id/btnRegresar"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Regresar al menú"
+                    android:text="@string/tvRegresar"
                     android:textColor="#000000"
                     android:textSize="18sp"
                     style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
