@@ -213,7 +213,7 @@
                     app:backgroundTint="#E5E9F0"
                     app:cornerRadius="12dp"
                     app:icon="@drawable/ic_flecha_regreso"
-                    app:iconSize="24dp"
+                    app:iconSize="40dp"
                     app:iconTint="#000000"
                     app:iconGravity="textStart"/>
             </LinearLayout>

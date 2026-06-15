@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.Editable
-import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.registrocalificaciones.databinding.ActivityConfiguracionBinding
 
@@ -27,12 +26,24 @@ class ConfiguracionActivity : AppCompatActivity() {
 
     private fun guardarDatos(){
         binding.btnGuardar.setOnClickListener {
-            val editor = preferencias.edit()
-            editor.putString("nombreCompleto", binding.etNombreCompleto.text.toString())
-            editor.putString("carrera", binding.etCarrera.text.toString())
-            editor.putString("grupo",binding.etGrupo.text.toString())
-            editor.putBoolean("notificaciones", binding.switchNotificaciones.isChecked)
-            editor.commit()
+            val nombre = binding.etNombreCompleto.text.toString().trim()
+            val carrera = binding.etCarrera.text.toString().trim()
+            val grupo = binding.etGrupo.text.toString().trim()
+            val notificaciones = binding.switchNotificaciones.isChecked
+
+            if (nombre.isNotEmpty() && carrera.isNotEmpty() && grupo.isNotEmpty()) {
+                preferencias.edit().apply {
+                    putString("nombreCompleto", nombre)
+                    putString("carrera", carrera)
+                    putString("grupo", grupo)
+                    putBoolean("notificaciones", notificaciones)
+                    apply()
+                }
+                Toast.makeText(applicationContext, "Datos guardados con éxito", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(applicationContext, "No se permiten campos vacíos.", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 

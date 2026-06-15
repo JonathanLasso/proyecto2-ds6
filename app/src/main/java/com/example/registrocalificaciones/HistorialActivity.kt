@@ -1,20 +1,77 @@
 package com.example.registrocalificaciones
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.registrocalificaciones.databinding.ActivityHistorialBinding
 
 class HistorialActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityHistorialBinding
+    // Ajustamos el nombre de tu variable al archivo real
+    private val nombreArchivo = "historial_calificaciones.txt"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_historial)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        binding = ActivityHistorialBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Ejecutar la lectura e inflado dinámico del historial
+        mostrarHistorial()
+
+        // Configurar los botones de retroceso
+        binding.btnBack.setOnClickListener { finish() }
+        binding.btnRegresar.setOnClickListener { finish() }
+    }
+
+    private fun mostrarHistorial() {
+        val contenedor = binding.containerHistorial
+        contenedor.removeAllViews()
+
+        try {
+            val lector = openFileInput(nombreArchivo).bufferedReader()
+            val lineas = lector.readLines()
+            lector.close()
+
+            for (linea in lineas) {
+                if (linea.isBlank()) continue
+                val datos = linea.split(",") // Asignatura, Notas, Promedio, Condición, Fecha
+
+                val vistaTarjeta = LayoutInflater.from(this).inflate(R.layout.tarjeta_nota_historial, contenedor, false)
+                val txtAsignatura = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtAsignatura)
+                val txtNotas = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtNotas)
+                val txtPromedio = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtPromedio)
+                val txtCondicion = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtCondicion)
+                val txtFecha = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtFecha)
+                val cardMateria = vistaTarjeta.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardMateria)
+
+                // Asignar datos
+                txtAsignatura.text = "Asignatura: ${datos[0]}"
+                txtNotas.text = "Notas: ${datos[1].replace("-", ", ")}"
+                txtPromedio.text = "Promedio: ${datos[2]}"
+                txtCondicion.text = "Condición: ${datos[3]}"
+                txtFecha.text = "Fecha: ${datos[4]}"
+
+                // Colores dinámicos
+                val (fondo, borde, texto) = when (datos[3].lowercase().trim()) {
+                    "excelente" -> Triple("#E8F5E9", "#C8E6C9", "#1B5E20")
+                    "bueno"     -> Triple("#E3EDFB", "#C5D7F2", "#1A237E")
+                    else        -> Triple("#FFF8E1", "#FFE082", "#5D4037") // Regular
+                }
+
+                cardMateria.setCardBackgroundColor(Color.parseColor(fondo))
+                cardMateria.setStrokeColor(ColorStateList.valueOf(Color.parseColor(borde)))
+                txtAsignatura.setTextColor(Color.parseColor(texto))
+                txtPromedio.setTextColor(Color.parseColor(texto))
+                txtCondicion.setTextColor(Color.parseColor(texto))
+
+                contenedor.addView(vistaTarjeta)
+            }
+        } catch (e: Exception) {
+            binding.txtMensajeVacio.visibility = View.VISIBLE
         }
     }
 }
