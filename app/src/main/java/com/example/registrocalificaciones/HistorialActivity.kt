@@ -1,5 +1,6 @@
 package com.example.registrocalificaciones
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -23,8 +24,14 @@ class HistorialActivity : AppCompatActivity() {
         mostrarHistorial()
 
         // Configurar los botones de retroceso
-        binding.btnBack.setOnClickListener { finish() }
-        binding.btnRegresar.setOnClickListener { finish() }
+        binding.btnBack.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnRegresar.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun mostrarHistorial() {
