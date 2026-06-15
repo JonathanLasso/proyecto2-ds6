@@ -42,6 +42,13 @@
     <string name="descripcionImagenGrupo">icono de grupo</string>
     <string name="descripcionImagenNotificaciones">icono de notificaciones</string>
 
+    <string name="tvGrupoHistorial">Grupo: </string>
+    <string name="tvPromedioHistorial">Promedio: </string>
+    <string name="tvCondicionHistorial">Condición: </string>
+    <string name="tvFecha">Fecha: </string>
+    <string name="tvAsignaturaHistorial">Asignatura: </string>
+
+
 
 
 </resources>

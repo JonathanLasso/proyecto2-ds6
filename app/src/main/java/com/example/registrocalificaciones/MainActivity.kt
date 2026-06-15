@@ -28,14 +28,17 @@ class MainActivity : AppCompatActivity() {
         binding.btnConfigurar.setOnClickListener {
             val intent = Intent(this, ConfiguracionActivity::class.java)
             startActivity(intent)
+            finish()
         }
         binding.btnRegistrar.setOnClickListener {
             val intent = Intent(this, RegistroCalificacionActivity::class.java)
             startActivity(intent)
+            finish()
         }
         binding.btnHistorial.setOnClickListener {
             val intent = Intent(this, HistorialActivity::class.java)
             startActivity(intent)
+            finish()
         }
         binding.btnSalir.setOnClickListener {
             finishAffinity()

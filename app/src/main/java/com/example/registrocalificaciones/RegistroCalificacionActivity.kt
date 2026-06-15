@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import android.Manifest
 import android.content.pm.PackageManager
-import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 class RegistroCalificacionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegistroCalificacionBinding
@@ -25,17 +25,20 @@ class RegistroCalificacionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistroCalificacionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         preferencias = getSharedPreferences("informacionEstudiante", Context.MODE_PRIVATE)
+
         guardarCalificacion()
         volverAlMenuConBoton()
         volverAlMenuConLaFlecha()
         limpiarDatos()
     }
+
     private fun guardarCalificacion(){
         binding.btnGuardar.setOnClickListener {
             val nombre = preferencias.getString("nombreCompleto","")
             val grupo = preferencias.getString("grupo","")
-            val asignatura = binding.etAsignatura.text.toString()
+            val asignatura = binding.etAsignatura.text.toString().trim()
             val nota1 = binding.etNota1.text.toString().toIntOrNull() ?: -1
             val nota2 = binding.etNota2.text.toString().toIntOrNull() ?: -1
             val nota3 = binding.etNota3.text.toString().toIntOrNull() ?: -1
@@ -51,31 +54,34 @@ class RegistroCalificacionActivity : AppCompatActivity() {
                     in 81..90  -> condiciones[1]
                     in 71..80  -> condiciones[2]
                     in 61..70  -> condiciones[3]
-                    else       -> condiciones[4] // Captura cualquier nota de 60 hacia abajo automáticamente
+                    else       -> condiciones[4]
                 }
+
                 binding.tvCondicion.text = estadoCondicion
                 binding.tvPromedio.text = promedio.toString()
+
                 val lineaDeDatos = "$nombre,$asignatura,$grupo,$promedio,$estadoCondicion,$fechaActual\n"
-                openFileOutput(archivo,MODE_APPEND).use { it.write(
-                    lineaDeDatos.toByteArray()
-                ) }
+                openFileOutput(archivo, MODE_APPEND).use { it.write(lineaDeDatos.toByteArray()) }
+
+                // Intentar lanzar la notificación si corresponde
                 enviarNotificacionCalificacion(asignatura, promedio.toString())
+
                 Toast.makeText(this, "Datos guardados con éxito.", Toast.LENGTH_SHORT).show()
-            }
-            else{
-                Toast.makeText(this, "No se permiten campos vacíos.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "No se permiten campos vacíos o notas inválidas.", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
     private fun enviarNotificacionCalificacion(asignatura: String, promedio: String) {
         val canalId = "canal_calificaciones"
 
-        // Verificar si el usuario permitió notificaciones en tu app
-        val activas = preferencias.getBoolean("notificaciones", false)
+        // Leemos el estado del switch (por defecto true si no se ha configurado)
+        val activas = preferencias.getBoolean("notificaciones", true)
 
         if (activas) {
             val builder = NotificationCompat.Builder(this, canalId)
-                .setSmallIcon(R.drawable.icono_notificacion) // Asegúrate de tener este icono
+                .setSmallIcon(R.drawable.icono_notificacion)
                 .setContentTitle("¡Calificación registrada!")
                 .setContentText("Tu promedio en $asignatura fue de: $promedio")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -83,12 +89,13 @@ class RegistroCalificacionActivity : AppCompatActivity() {
 
             val manager = NotificationManagerCompat.from(this)
 
-            // Comprobación de permisos necesaria para Android 13+
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            // Únicamente validamos que el permiso ya esté concedido (sin solicitarlo en pantalla)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                 manager.notify(1001, builder.build())
             }
         }
     }
+
     private fun limpiarDatos(){
         binding.btnLimpiar.setOnClickListener {
             binding.etAsignatura.setText("")
@@ -98,16 +105,20 @@ class RegistroCalificacionActivity : AppCompatActivity() {
             binding.etNota4.setText("")
         }
     }
+
     private fun volverAlMenuConLaFlecha(){
         binding.btnBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
+
     private fun volverAlMenuConBoton(){
         binding.btnRegresar.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 }

@@ -25,10 +25,12 @@ class HistorialActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
         binding.btnRegresar.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
     private fun mostrarHistorial() {
@@ -55,7 +57,7 @@ class HistorialActivity : AppCompatActivity() {
                 val txtAsignatura = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtAsignatura)
                 val txtNotas = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtNotas)
                 val txtPromedio = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtPromedio)
-                val txtCondicion = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtCondicion)
+                val txtCondicion = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtCondicionHistorial)
                 val txtFecha = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtFecha)
                 val cardMateria = vistaTarjeta.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardMateria)
                 // Asignar datos
@@ -65,10 +67,17 @@ class HistorialActivity : AppCompatActivity() {
                 txtCondicion.text = "Condición: ${datos[4]}"
                 txtFecha.text = "Fecha: ${datos[5]}"
                 // Colores dinámicos
-                val (fondo, borde, texto) = when (datos[3].lowercase().trim()) {
-                    "excelente" -> Triple("#E8F5E9", "#C8E6C9", "#1B5E20")
-                    "bueno"     -> Triple("#E3EDFB", "#C5D7F2", "#1A237E")
-                    else        -> Triple("#FFF8E1", "#FFE082", "#5D4037") // Regular
+                val condicionLimpia = datos[4].lowercase().trim()
+
+                // Triple(Color de Fondo, Color de Borde, Color de Texto)
+                val (fondo, borde, texto) = when (condicionLimpia) {
+                    "excelente"       -> Triple("#E8F5E9", "#C8E6C9", "#1B5E20") // Verde Oscuro
+                    "bueno"           -> Triple("#E8F8F5", "#A3E4D7", "#117A65") // Verde Normal
+                    "regular"         -> Triple("#FFFDE7", "#FFF59D", "#F57F17") // Amarillo / Amarillo Oscuro
+                    "mínimo aprobado",
+                    "minimo aprobado" -> Triple("#FFF3E0", "#FFCC80", "#E65100") // Naranja
+                    "reprobado"       -> Triple("#FFEBEE", "#FFCDD2", "#C62828") // Rojo
+                    else              -> Triple("#F5F5F5", "#E0E0E0", "#424242") // Gris por si acaso
                 }
                 cardMateria.setCardBackgroundColor(Color.parseColor(fondo))
                 cardMateria.setStrokeColor(ColorStateList.valueOf(Color.parseColor(borde)))
