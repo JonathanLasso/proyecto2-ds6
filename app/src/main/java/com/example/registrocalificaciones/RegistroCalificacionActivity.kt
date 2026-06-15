@@ -37,7 +37,7 @@ class RegistroCalificacionActivity : AppCompatActivity() {
 
             if(asignatura.isNotEmpty() && nota1 in 0..100 && nota2 in 0..100 && nota3 in 0..100 && nota4 in 0..100){
                 val promedio = (nota1 + nota2 + nota3 + nota4) / 4
-                val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val fechaActual = sdf.format(Date())
                 val estadoCondicion = when (promedio) {
                     in 91..100 -> "Excelente"

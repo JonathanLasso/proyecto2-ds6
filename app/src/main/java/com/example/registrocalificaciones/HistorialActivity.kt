@@ -38,6 +38,18 @@ class HistorialActivity : AppCompatActivity() {
         val contenedor = binding.containerHistorial
         contenedor.removeAllViews()
 
+        // 1. Verificamos si el archivo existe y tiene tamaño mayor a 0
+        val archivo = getFileStreamPath(nombreArchivo)
+
+        if (!archivo.exists() || archivo.length() == 0L) {
+            // Si no existe o está vacío, mostramos el mensaje y salimos
+            binding.txtMensajeVacio.visibility = View.VISIBLE
+            return
+        }
+
+        // 2. Si hay datos, ocultamos el mensaje
+        binding.txtMensajeVacio.visibility = View.GONE
+
         try {
             val lector = openFileInput(nombreArchivo).bufferedReader()
             val lineas = lector.readLines()
