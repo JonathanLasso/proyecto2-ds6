@@ -48,8 +48,8 @@ class RegistroCalificacionActivity : AppCompatActivity() {
                 }
                 binding.tvCondicion.text = estadoCondicion
                 binding.tvPromedio.text = promedio.toString()
-                val lineaDeDatos = "$nombre,$asignatura,$grupo,$nota1,$nota2,$nota3,$nota4,$promedio,$estadoCondicion,$fechaActual\n"
-                openFileOutput(archivo,MODE_PRIVATE).use { it.write(
+                val lineaDeDatos = "$asignatura,$grupo,$promedio,$estadoCondicion,$fechaActual\n"
+                openFileOutput(archivo,MODE_APPEND).use { it.write(
                     lineaDeDatos.toByteArray()
                 ) }
                 Toast.makeText(this, "Datos guardados con éxito.", Toast.LENGTH_SHORT).show()
