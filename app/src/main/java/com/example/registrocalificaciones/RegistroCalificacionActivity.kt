@@ -60,13 +60,13 @@ class RegistroCalificacionActivity : AppCompatActivity() {
                 binding.tvCondicion.text = estadoCondicion
                 binding.tvPromedio.text = promedio.toString()
 
-                val lineaDeDatos = "$nombre,$asignatura,$grupo,$promedio,$estadoCondicion,$fechaActual\n"
+                val lineaDeDatos = "$nombre,$asignatura,$grupo,$nota1,$nota2,$nota3,$nota4,$promedio,$estadoCondicion,$fechaActual\n"
                 openFileOutput(archivo, MODE_APPEND).use { it.write(lineaDeDatos.toByteArray()) }
 
                 // Intentar lanzar la notificación si corresponde
                 enviarNotificacionCalificacion(asignatura, promedio.toString())
 
-                Toast.makeText(this, "Datos guardados con éxito.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Calificaciones guardadas con éxito.", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "No se permiten campos vacíos o notas inválidas.", Toast.LENGTH_SHORT).show()
             }
@@ -103,6 +103,7 @@ class RegistroCalificacionActivity : AppCompatActivity() {
             binding.etNota2.setText("")
             binding.etNota3.setText("")
             binding.etNota4.setText("")
+            Toast.makeText(applicationContext, "Campos limpiados", Toast.LENGTH_SHORT).show()
         }
     }
 

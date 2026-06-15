@@ -98,6 +98,7 @@ class ConfiguracionActivity : AppCompatActivity() {
             binding.etCarrera.setText("")
             binding.etGrupo.setText("")
             binding.switchNotificaciones.isChecked = false // Se cambia setChecked por .isChecked
+            Toast.makeText(applicationContext, "Campos limpiados", Toast.LENGTH_SHORT).show()
         }
     }
 

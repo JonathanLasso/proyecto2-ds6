@@ -62,13 +62,13 @@ class HistorialActivity : AppCompatActivity() {
                 val cardMateria = vistaTarjeta.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardMateria)
                 // Asignar datos
                 txtAsignatura.text = "Asignatura: ${datos[1]}"
-                txtNotas.text = "Notas: ${datos[2].replace("-", ", ")}"
-                txtPromedio.text = "Promedio: ${datos[3]}"
-                txtCondicion.text = "Condición: ${datos[4]}"
-                txtFecha.text = "Fecha: ${datos[5]}"
-                // Colores dinámicos
-                val condicionLimpia = datos[4].lowercase().trim()
-
+                // Concatenamos las 4 notas individuales (índices 3, 4, 5 y 6)
+                txtNotas.text = "Notas: ${datos[3]}, ${datos[4]}, ${datos[5]}, ${datos[6]}"
+                txtPromedio.text = "Promedio: ${datos[7]}"
+                txtCondicion.text = "Condición: ${datos[8]}"
+                txtFecha.text = "Fecha: ${datos[9]}"
+                // Colores dinámicos basados en la condición (índice 8)
+                val condicionLimpia = datos[8].lowercase().trim()
                 // Triple(Color de Fondo, Color de Borde, Color de Texto)
                 val (fondo, borde, texto) = when (condicionLimpia) {
                     "excelente"       -> Triple("#E8F5E9", "#C8E6C9", "#1B5E20") // Verde Oscuro
