@@ -2,6 +2,7 @@ package com.example.registrocalificaciones
 
 import android.Manifest
 import android.content.Context
+import android.content.ContentValues
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -12,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.registrocalificaciones.databinding.ActivityConfiguracionBinding
+import androidx.core.content.edit
 
 class ConfiguracionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConfiguracionBinding
@@ -35,13 +37,13 @@ class ConfiguracionActivity : AppCompatActivity() {
         binding = ActivityConfiguracionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferencias = getSharedPreferences("informacionEstudiante", Context.MODE_PRIVATE)
-
+        val idGuardado = preferencias.getLong("id_estudiante", -1L).toInt()
         guardarDatos()
         limpiarDatos()
         volverAlMenuConBoton()
         volverAlMenuConLaFlecha()
-        mostrarInformacion() // <- Aquí ya cargamos todo, incluido el Switch
-        configurarEscuchadorSwitch() // <- Aquí vigilamos si activan el Switch en tiempo real
+        mostrarInformacion(idGuardado)
+        configurarEscuchadorSwitch()
     }
 
     // 2. DETECTAR CUANDO EL USUARIO MUEVE EL SWITCH
@@ -66,14 +68,28 @@ class ConfiguracionActivity : AppCompatActivity() {
             val notificaciones = binding.switchNotificaciones.isChecked
 
             if (nombre.isNotEmpty() && carrera.isNotEmpty() && grupo.isNotEmpty()) {
-                preferencias.edit().apply {
-                    putString("nombreCompleto", nombre)
-                    putString("carrera", carrera)
-                    putString("grupo", grupo)
-                    putBoolean("notificaciones", notificaciones) // Guarda el estado del switch
-                    apply()
+                val admin = AdministradorDB(this)
+                val db = admin.writableDatabase
+                val datos = ContentValues().apply {
+                    put("nombre", nombre)
+                    put("carrera", carrera)
+                    put("grupo", grupo)
+                    put("notificaciones", notificaciones)
                 }
-                Toast.makeText(applicationContext, "Datos guardados con éxito", Toast.LENGTH_SHORT).show()
+                val resultado = db.insert("configuracion",null,datos)
+                db.close()
+                if(resultado != -1L){
+                    preferencias.edit {
+                        putLong(
+                            "id_estudiante",
+                            resultado
+                        ) // 'resultado' es el ID generado por SQLite
+                    }
+                    Toast.makeText(applicationContext, "Datos guardados con éxito.", Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    Toast.makeText(applicationContext, "Los datos no se guardaron con éxito.", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(applicationContext, "No se permiten campos vacíos.", Toast.LENGTH_SHORT).show()
             }
@@ -81,15 +97,28 @@ class ConfiguracionActivity : AppCompatActivity() {
     }
 
     // 3. CARGAR EL ESTADO ANTERIOR DEL SWITCH
-    private fun mostrarInformacion(){
-        binding.etNombreCompleto.setText(preferencias.getString("nombreCompleto",""))
-        binding.etCarrera.setText(preferencias.getString("carrera",""))
-        binding.etGrupo.setText(preferencias.getString("grupo",""))
+    private fun mostrarInformacion(idEstudiante: Int){
+        val admin = AdministradorDB(this)
+        val db = admin.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT nombre, carrera, grupo, notificaciones FROM configuracion WHERE id = ?",
+            arrayOf(idEstudiante.toString())
+        )
+        if (cursor.moveToFirst()) {
+            val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+            val carrera = cursor.getString(cursor.getColumnIndexOrThrow("carrera"))
+            val grupo = cursor.getString(cursor.getColumnIndexOrThrow("grupo"))
+            val notificaciones = cursor.getInt(cursor.getColumnIndexOrThrow("notificaciones")) == 1
 
-        // Leemos el valor guardado. Por defecto es 'true' para nuevos usuarios,
-        // pero si ya se guardó antes, tomará el valor real (true o false).
-        val estadoNotificaciones = preferencias.getBoolean("notificaciones", false)
-        binding.switchNotificaciones.isChecked = estadoNotificaciones
+            binding.etNombreCompleto.setText(nombre)
+            binding.etCarrera.setText(carrera)
+            binding.etGrupo.setText(grupo)
+            binding.switchNotificaciones.isChecked = notificaciones
+        } else {
+            Toast.makeText(applicationContext, "No se puedo cargar la información configurada.", Toast.LENGTH_SHORT).show()
+        }
+        cursor.close()
+        db.close()
     }
 
     private fun limpiarDatos(){

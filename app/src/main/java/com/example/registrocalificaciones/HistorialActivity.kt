@@ -1,26 +1,30 @@
 package com.example.registrocalificaciones
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.registrocalificaciones.databinding.ActivityHistorialBinding
+import com.google.android.material.card.MaterialCardView
 
 class HistorialActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHistorialBinding
-    // Ajustamos el nombre de tu variable al archivo real
-    private val nombreArchivo = "historial_calificaciones.txt"
-
+    private lateinit var preferencias: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHistorialBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Ejecutar la lectura e inflado dinámico del historial
-        mostrarHistorial()
+        preferencias = getSharedPreferences("informacionEstudiante", Context.MODE_PRIVATE)
+        val idEstudiante = preferencias.getLong("id_estudiante", -1L).toInt()
+        mostrarHistorial(idEstudiante)
         // Configurar los botones de retroceso
         binding.btnBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -33,62 +37,62 @@ class HistorialActivity : AppCompatActivity() {
             finish()
         }
     }
-    private fun mostrarHistorial() {
+    private fun mostrarHistorial(idEstudiante: Int) {
         val contenedor = binding.containerHistorial
         contenedor.removeAllViews()
-        // 1. Verificamos si el archivo existe y tiene tamaño mayor a 0
-        val archivo = getFileStreamPath(nombreArchivo)
 
-        if (!archivo.exists() || archivo.length() == 0L) {
-            // Si no existe o está vacío, mostramos el mensaje y salimos
+        val admin = AdministradorDB(this)
+        val db = admin.readableDatabase
+
+        // Consultamos solo las calificaciones que pertenecen al estudiante seleccionado
+        val cursor = db.rawQuery(
+            "SELECT * FROM registroCalificaciones WHERE id_estudiante = ?",
+            arrayOf(idEstudiante.toString())
+        )
+
+        if (cursor.count == 0) {
             binding.txtMensajeVacio.visibility = View.VISIBLE
-            return
-        }
-        // 2. Si hay datos, ocultamos el mensaje
-        binding.txtMensajeVacio.visibility = View.GONE
-        try {
-            val lector = openFileInput(nombreArchivo).bufferedReader()
-            val lineas = lector.readLines()
-            lector.close()
-            for (linea in lineas) {
-                if (linea.isBlank()) continue
-                val datos = linea.split(",") // Asignatura, Notas, Promedio, Condición, Fecha
+        } else {
+            binding.txtMensajeVacio.visibility = View.GONE
+
+            while (cursor.moveToNext()) {
+                // Extraer datos usando el nombre de las columnas (más seguro)
+                val asignatura = cursor.getString(cursor.getColumnIndexOrThrow("asignatura"))
+                val n1 = cursor.getInt(cursor.getColumnIndexOrThrow("nota1"))
+                val n2 = cursor.getInt(cursor.getColumnIndexOrThrow("nota2"))
+                val n3 = cursor.getInt(cursor.getColumnIndexOrThrow("nota3"))
+                val n4 = cursor.getInt(cursor.getColumnIndexOrThrow("nota4"))
+                val promedio = cursor.getInt(cursor.getColumnIndexOrThrow("promedio"))
+                val condicion = cursor.getString(cursor.getColumnIndexOrThrow("condicion"))
+                val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"))
+
+                // Inflar vista
                 val vistaTarjeta = LayoutInflater.from(this).inflate(R.layout.tarjeta_nota_historial, contenedor, false)
-                val txtAsignatura = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtAsignatura)
-                val txtNotas = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtNotas)
-                val txtPromedio = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtPromedio)
-                val txtCondicion = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtCondicionHistorial)
-                val txtFecha = vistaTarjeta.findViewById<android.widget.TextView>(R.id.txtFecha)
-                val cardMateria = vistaTarjeta.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardMateria)
-                // Asignar datos
-                txtAsignatura.text = "Asignatura: ${datos[1]}"
-                // Concatenamos las 4 notas individuales (índices 3, 4, 5 y 6)
-                txtNotas.text = "Notas: ${datos[3]}, ${datos[4]}, ${datos[5]}, ${datos[6]}"
-                txtPromedio.text = "Promedio: ${datos[7]}"
-                txtCondicion.text = "Condición: ${datos[8]}"
-                txtFecha.text = "Fecha: ${datos[9]}"
-                // Colores dinámicos basados en la condición (índice 8)
-                val condicionLimpia = datos[8].lowercase().trim()
-                // Triple(Color de Fondo, Color de Borde, Color de Texto)
-                val (fondo, borde, texto) = when (condicionLimpia) {
-                    "excelente"       -> Triple("#E8F5E9", "#C8E6C9", "#1B5E20") // Verde Oscuro
-                    "bueno"           -> Triple("#E8F8F5", "#A3E4D7", "#117A65") // Verde Normal
-                    "regular"         -> Triple("#FFFDE7", "#FFF59D", "#F57F17") // Amarillo / Amarillo Oscuro
-                    "mínimo aprobado",
-                    "minimo aprobado" -> Triple("#FFF3E0", "#FFCC80", "#E65100") // Naranja
-                    "reprobado"       -> Triple("#FFEBEE", "#FFCDD2", "#C62828") // Rojo
-                    else              -> Triple("#F5F5F5", "#E0E0E0", "#424242") // Gris por si acaso
+
+                // Asignar datos a la vista
+                vistaTarjeta.findViewById<TextView>(R.id.txtAsignatura).text = "Asignatura: $asignatura"
+                vistaTarjeta.findViewById<TextView>(R.id.txtNotas).text = "Notas: $n1, $n2, $n3, $n4"
+                vistaTarjeta.findViewById<TextView>(R.id.txtPromedio).text = "Promedio: $promedio"
+                vistaTarjeta.findViewById<TextView>(R.id.txtCondicionHistorial).text = "Condición: $condicion"
+                vistaTarjeta.findViewById<TextView>(R.id.txtFecha).text = "Fecha: $fecha"
+
+                val cardMateria = vistaTarjeta.findViewById<MaterialCardView>(R.id.cardMateria)
+
+                // Colores dinámicos
+                val (fondo, borde, texto) = when (condicion.lowercase().trim()) {
+                    "excelente" -> Triple("#E8F5E9", "#C8E6C9", "#1B5E20")
+                    "bueno"     -> Triple("#E8F8F5", "#A3E4D7", "#117A65")
+                    "regular"   -> Triple("#FFFDE7", "#FFF59D", "#F57F17")
+                    "mínimo aprobado", "minimo aprobado" -> Triple("#FFF3E0", "#FFCC80", "#E65100")
+                    else        -> Triple("#FFEBEE", "#FFCDD2", "#C62828")
                 }
                 cardMateria.setCardBackgroundColor(Color.parseColor(fondo))
                 cardMateria.setStrokeColor(ColorStateList.valueOf(Color.parseColor(borde)))
-                txtAsignatura.setTextColor(Color.parseColor(texto))
-                txtPromedio.setTextColor(Color.parseColor(texto))
-                txtCondicion.setTextColor(Color.parseColor(texto))
-
                 contenedor.addView(vistaTarjeta)
             }
-        } catch (e: Exception) {
-            binding.txtMensajeVacio.visibility = View.VISIBLE
         }
+
+        cursor.close()
+        db.close()
     }
 }

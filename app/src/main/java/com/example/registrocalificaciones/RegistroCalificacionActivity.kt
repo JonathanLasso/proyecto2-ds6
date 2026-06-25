@@ -13,31 +13,28 @@ import java.util.Locale
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import android.Manifest
+import android.content.ContentValues
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 
 class RegistroCalificacionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegistroCalificacionBinding
     private lateinit var preferencias: SharedPreferences
-    private val archivo = "historial_calificaciones.txt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistroCalificacionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         preferencias = getSharedPreferences("informacionEstudiante", Context.MODE_PRIVATE)
-
-        guardarCalificacion()
+        val idEstudiante = preferencias.getLong("id_estudiante", -1L).toInt()
+        guardarCalificacion(idEstudiante)
         volverAlMenuConBoton()
         volverAlMenuConLaFlecha()
         limpiarDatos()
     }
 
-    private fun guardarCalificacion(){
+    private fun guardarCalificacion(idEstudiante: Int){
         binding.btnGuardar.setOnClickListener {
-            val nombre = preferencias.getString("nombreCompleto","")
-            val grupo = preferencias.getString("grupo","")
             val asignatura = binding.etAsignatura.text.toString().trim()
             val nota1 = binding.etNota1.text.toString().toIntOrNull() ?: -1
             val nota2 = binding.etNota2.text.toString().toIntOrNull() ?: -1
@@ -56,17 +53,41 @@ class RegistroCalificacionActivity : AppCompatActivity() {
                     in 61..70  -> condiciones[3]
                     else       -> condiciones[4]
                 }
-
                 binding.tvCondicion.text = estadoCondicion
                 binding.tvPromedio.text = promedio.toString()
-
-                val lineaDeDatos = "$nombre,$asignatura,$grupo,$nota1,$nota2,$nota3,$nota4,$promedio,$estadoCondicion,$fechaActual\n"
-                openFileOutput(archivo, MODE_APPEND).use { it.write(lineaDeDatos.toByteArray()) }
-
+                val admin = AdministradorDB(this)
+                val dbConsultar = admin.readableDatabase
+                val cursor = dbConsultar.rawQuery(
+                    "SELECT nombre, carrera, grupo FROM configuracion WHERE id = ?",
+                    arrayOf(idEstudiante.toString())
+                )
+                if(cursor.moveToFirst()){
+                    val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+                    val carrera = cursor.getString(cursor.getColumnIndexOrThrow("carrera"))
+                    val grupo = cursor.getString(cursor.getColumnIndexOrThrow("grupo"))
+                }
+                else {
+                    Toast.makeText(applicationContext, "No se puedo cargar la información configurada.", Toast.LENGTH_SHORT).show()
+                }
+                val dbInsertar = admin.writableDatabase
+                val datos = ContentValues().apply{
+                    put("id_estudiante", idEstudiante)
+                    put("asignatura", asignatura)
+                    put("nota1", nota1)
+                    put("nota2", nota2)
+                    put("nota3", nota3)
+                    put("nota4", nota4)
+                    put("promedio",promedio.toString().toIntOrNull())
+                    put("condicion", estadoCondicion)
+                    put("fecha",fechaActual)
+                }
+                val resultado = dbInsertar.insert("registroCalificaciones",null,datos)
+                cursor.close()
+                dbConsultar.close()
+                dbInsertar.close()
                 // Intentar lanzar la notificación si corresponde
-                enviarNotificacionCalificacion(asignatura, promedio.toString())
-
                 Toast.makeText(this, "Calificaciones guardadas con éxito.", Toast.LENGTH_SHORT).show()
+                enviarNotificacionCalificacion(asignatura, promedio.toString())
             } else {
                 Toast.makeText(this, "No se permiten campos vacíos o notas inválidas.", Toast.LENGTH_SHORT).show()
             }
